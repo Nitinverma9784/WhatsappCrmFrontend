@@ -56,7 +56,7 @@ export default function LoginPage() {
           <CardContent className="space-y-4 pt-4">
             <form onSubmit={handleLogin} className="space-y-5">
               <div className="space-y-2 relative">
-                <Mail className="absolute left-3 top-10 h-4 w-4 text-muted-foreground" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                 <Input 
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -66,7 +66,7 @@ export default function LoginPage() {
                 />
               </div>
               <div className="space-y-2 relative">
-                <Lock className="absolute left-3 top-10 h-4 w-4 text-muted-foreground" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                 <Input 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
