@@ -101,10 +101,11 @@ export default function MessageBubble({ message }: MessageProps) {
 
   const myId = user?._id != null ? String(user._id) : ''
 
+  // "Mine" should only be CRM-originated messages from this logged-in CRM user.
+  // Treating WhatsApp `fromMe` as mine can misalign historical/synced rows for sub-users.
   const isMine =
-    (message.senderType === 'crm_user' &&
-      (sameUserId(message.sender, myId) || (message.sender === 'me' && !myId))) ||
-    (message.senderType === 'whatsapp' && message.sender === 'me')
+    message.senderType === 'crm_user' &&
+    (sameUserId(message.sender, myId) || (message.sender === 'me' && !myId))
 
   const isOtherAgent =
     message.senderType === 'crm_user' && !sameUserId(message.sender, myId) && message.sender !== 'me'
