@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { toast } from 'react-toastify'
-import { UserPlus, Settings, LayoutDashboard, GroupIcon, Smartphone, KeyRound, Trash2 } from 'lucide-react'
+import { UserPlus, Settings, LayoutDashboard, GroupIcon, Smartphone, KeyRound, Trash2, Copy, Eye, EyeOff } from 'lucide-react'
 import { useChatStore } from '@/store/useChatStore'
 
 type FlatGroup = {
@@ -29,6 +29,7 @@ export default function UserManagement() {
   const [assignedGroupIds, setAssignedGroupIds] = useState<string[]>([])
   const [assignedSessionIds, setAssignedSessionIds] = useState<string[]>([])
   const [tenants, setTenants] = useState<any[]>([])
+  const [showPassword, setShowPassword] = useState(false)
   const isSuperAdmin = user?.username === 'masteradmin'
 
   const generatePassword = () => {
@@ -138,6 +139,19 @@ export default function UserManagement() {
     toast.success('Random password generated')
   }
 
+  const handleCopyPassword = async () => {
+    if (!newUser.password) {
+      toast.error('No password to copy')
+      return
+    }
+    try {
+      await navigator.clipboard.writeText(newUser.password)
+      toast.success('Password copied')
+    } catch {
+      toast.error('Failed to copy password')
+    }
+  }
+
   return (
     <div className="min-h-[100dvh] max-w-[100vw] overflow-x-hidden bg-secondary/10 dark:bg-[#0b141a] p-3 sm:p-4 md:p-8 pb-[max(1rem,env(safe-area-inset-bottom,0px))] font-sans">
       <div className="max-w-6xl mx-auto space-y-8">
@@ -166,14 +180,36 @@ export default function UserManagement() {
                   className="bg-secondary/20 border-none"
                   required
                 />
-                <Input
-                  placeholder="Password"
-                  type="password"
-                  value={newUser.password}
-                  onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-                  className="bg-secondary/20 border-none"
-                  required
-                />
+                <div className="flex items-center gap-2">
+                  <Input
+                    placeholder="Password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={newUser.password}
+                    onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                    className="bg-secondary/20 border-none"
+                    required
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setShowPassword((v) => !v)}
+                    title={showPassword ? 'Hide password' : 'Show password'}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={handleCopyPassword}
+                    title="Copy password"
+                    aria-label="Copy password"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
                 <Button
                   type="button"
                   variant="outline"
